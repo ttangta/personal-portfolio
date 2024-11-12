@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#nextButton").click(function(){
+			// 요소가 체크되있는지 판단
+			if($("#yesagree1").is(":checked")){
+			}else{
+				alert("서비스이용약관은 반드시 동의해주세요");
+				return false;
+			}
+			
+			if($("#yesagree2").is(":checked")){
+			
+			}else{
+				alert("개인정보 약관동의는 반드시 동의해주세요");
+				return false;
+			}
+			
+			if($("#disagree3").is(":checked")){
+				if(confirm("광고성 문자 동의를 하지 않을경우 이벤트,할인 등등의 알림을 받을 수 없습니다 괜찮습니까?")){
+					
+				}else{
+					$("#yesagree3").attr("checked","checked");
+				}
+			}
+			$.ajax({
+				url:"userInfoWrite?email1=" + $("#email1").val() + "&email2=" + $("#email2").val(),
+				type:"get",
+				success:function(response){
+					$("#main-place").html(response);
+					$("#no2 p").css("color","black");
+					$("#no3 p").css("color","orange");
+					$("#no2 p").css("text-decoration","none");
+					$("#no3 p").css("text-decoration","underline");
+				},
+				error:function(xhr,status,error){
+					$("#main-place").html("로드실패");
+					console.error("에러:",error);
+				}
+			});
+				
+		});
+	});
+</script>
+<style>
+#main-place{
+	height: 560px;	/* ajax시 표시될 부분을 해당 html에서 css 적용 가능*/
+}
+#contents{
+	width:50%;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+.checks{
+	display: flex;
+	justify-content: flex-end;
+	
+}
+#next{
+	margin-top:20px;
+	display: flex;
+	justify-content: flex-end;
+}
+h5{
+	margin-left: 20px;
+	font-weight: bold;
+	margin-top: 20px;
+}	
+
+</style>
+</head>
+<body>
+	<h5>약관동의</h5>
+	<input type="hidden" name="email1" id="email1" th:value="${email1}">
+	<input type="hidden" name="email2" id="email2" th:value="${email2}">
+	<div id="contents">
+		<textarea rows="5" cols="50" readonly="readonly" style="resize: none;">[필수]서비스이용 약관동의</textarea>
+		<div class="checks">
+			<input type="radio" name="agreeCheck1" id="yesagree1" value="true"><label for="yesagree1">동의</label>&nbsp;&nbsp;
+			<input type="radio" name="agreeCheck1" id="disagree1" value="false"><label for="disagree1">미동의</label>
+		</div>
+		<textarea rows="5" cols="50" readonly="readonly" style="resize: none;">[필수]개인정보 약관동의</textarea>
+		<div class="checks">
+			<input type="radio" name="agreeCheck2" id="yesagree2" value="true"><label for="yesagree2">동의</label>&nbsp;&nbsp;
+			<input type="radio" name="agreeCheck2" id="disagree2" value="false"><label for="disagree2">미동의</label>
+		</div>
+		<textarea rows="5" cols="50" readonly="readonly" style="resize: none;">[선택]광고성 문자 동의</textarea>
+		<div class="checks">
+			<input type="radio" name="agreeCheck3" id="yesagree3" value="true"><label for="yesagree3">동의</label>&nbsp;&nbsp;
+			<input type="radio" name="agreeCheck3" id="disagree3" value="false" checked="checked"><label for="disagree3">미동의</label>
+		</div>
+		<div id="next">
+			<input type="button" value="다음" id="nextButton">
+		</div>
+	</div>
+</body>
+</html>

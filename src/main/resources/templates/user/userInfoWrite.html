@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+#main-place{
+	height: 500px;
+}
+#address,#detailAddress{
+	width: 350px;
+}
+input[type="text"],input[type="password"]{
+	width:150px;
+}
+#sample6_extraAddress{
+	display: none;
+}
+h5{
+	margin-top:50px;
+	margin-left: 20px;
+}
+#table{
+	width: 60%;
+	margin: auto;
+}
+#byear{
+	margin-right: 5px;
+}
+#bmonth,#bday,#tel2,#tel3{
+	margin-right: 5px;
+	width: 75px;
+}
+</style>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script>
+    function sample6_execDaumPostcode() {
+        // 다음 도로명 주소 찾기 api 사용
+		new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                    document.getElementById("sample6_extraAddress").value = extraAddr;
+                
+                } else {
+                    document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("address").value = addr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("detailAddress").focus();
+            }
+        }).open();
+    }
+$(document).ready(function(){
+	$("#pwCheck").attr("src","img/x.png");
+	// 1900년도에서 2999년도까지 option 태그에 넣는법
+	for(var i=1900; i <=2100; i++){
+		$("#byear").append("<option value='" + i + "'>" + i + "</option>");
+	}
+	$("#test").click(function(){
+		alert($("#byear").val());
+	});
+	$("#idCheck").click(function(){
+		var id = $("#id").val();
+		if(id == "" || id==null){
+			alert("아이디를 먼저 입력해주세요");
+			$("#id").focus();
+			return false;
+		}else{
+			window.open("/idCheck?id=" + id ,"","width=350 height=130");
+		}
+	});
+	$("#re_pwd").change(function(){
+		if($("#re_pwd").val() == $("#pwd").val()){
+			$("#pwCheck").attr("src","img/o.png");
+		}else{
+			$("#pwCheck").attr("src","img/x.png");
+		}
+	});
+	$("#joinMember").click(function(){
+		if($("#name").val().trim() == "" || $("#name").val().trim() == null){
+			$("#name").focus();
+			alert("이름을 입력해주세요");
+			return false;
+		}else if($("#id").val().trim() == "" || $("#id").val().trim() == null){
+			$("#id").focus();
+			alert("아이디를 입력해주세요");
+			return false;
+		}else if($("#idChecking").val() != 1){
+			alert("아이디 중복검사를 진행해주세요");
+			return false;
+		}else if($("#pwd").val().trim() == "" || $("#pwd").val().trim() == null){
+			alert("비밀번호를 입력하세요");
+			$("#pwd").focus();
+			return false;
+		}else if($("#re_pwd").val().trim() == "" || $("#re_pwd").val().trim() == null){
+			alert("비밀번호 재입력을 입력해주세요");
+			$("#re_pwd").focus();
+			return false;
+		}else if($("#pwd").val() != $("#re_pwd").val()){
+			alert("비밀번호가 서로다릅니다. 다시 확인해주세요");
+			return false;
+		}else if($("#tel2").val().trim() == "" || $("#tel2").val().trim() == null){
+			alert("전화번호를 입력하세요");
+			$("#tel2").focus();
+			return false;
+		}else if($("#tel3").val().trim() == "" || $("#tel3").val().trim() == null){
+			alert("전화번호를 입력하세요");
+			$("#tel3").focus();
+			return false;
+		}else if($("#bmonth").val().trim() == "" || $("#bmonth").val().trim() == null){
+			alert("출생월을 입력해주세요");
+			$("#bmonth").focus();
+			return false;
+		}else if($("#bday").val().trim() == "" || $("#bday").val().trim() == null){
+			alert("출생일을 입력해주세요");
+			$("#bday").focus();
+			return false;
+		}else if($("#address").val().trim() == "" || $("#address").val().trim() == null){
+			alert("주소 찾기를 통해 주소를 입력받아주세요");
+			return false;
+		}else if($("#detailAddress").val().trim() == "" || $("#detailAddress").val().trim() == null){
+			alert("상세주소를 입력해주세요");
+			$("#detailAddress").focus();
+			return false;
+		}else if($("#bmonth").val()<= 0 || $("#bmonth").val()>12){
+			alert("1에서 12월까지의 달 중 입력해주세요");
+			$("#bmonth").focus();
+			return false;
+		}else if($("#bday").val()<=0 || $("#bday").val()>31){
+			alert("1에서31까지 중에서 입력해주세요");
+			$("#bday").focus();
+			return false;
+		}
+		$.ajax({
+			url:"insertUserInfo?name="+$("#name").val() + "&id=" + $("#id").val() + "&pwd=" + $("#pwd").val()
+				+ "&byear=" + $("#byear").val() + "&bmonth=" + $("#bmonth").val() + "&bday=" + $("#bday").val()
+				+ "&postcode=" + $("#postcode").val() + "&address=" + $("#address").val() + "&detailAddress=" + $("#detailAddress").val()
+				+ "&email1=" + $("#email1").val() + "&email2=" + $("#email2").val() + "&tel1=" + $("#tel1").val() + "&tel2=" + $("#tel2").val() + "&tel3=" + $("#tel3").val(),
+			type:"post",
+			success:function(response){
+				$("#main-place").html(response);
+				$("#no3 p").css("color","black");
+				$("#no3 p").css("text-decoration","none");
+				$("#no4 p").css("color","orange");
+				$("#no4 p").css("text-decoration","underline");
+			},
+			error:function(xhr,status,error){
+				$("#main-place").html("로드실패");
+				console.error("에러:",error);
+			}
+		});
+		//$("#insertUserInfo").submit();
+	});
+	
+});
+</script>
+</head>
+<body>
+	<h5>회원 정보입력</h5>
+	<form action="insertUserInfo" method="post" name="writeinfoForm" id="insertUserInfo">
+	<input type="hidden" id="idChecking" value="0">
+		<table class="table" id="table">
+			<tr>
+				<td>
+					이름
+				</td>
+				<td>
+					<input type="text" name="name" id="name">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					아이디
+				</td>
+				<td>
+					<input type="text" name="id" id="id"><input type="button" value="아이디 중복검사" id="idCheck">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					비밀번호
+				</td>
+				<td>
+					<input type="password" name="pwd" id="pwd">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					비밀번호 재입력
+				</td>
+				<td>
+					<input type="password" name="re_pwd" id="re_pwd"><img id="pwCheck" height="20px" width="20px">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					이메일
+				</td>
+				<td>
+					<input type="text" name="email1" id="email1" th:value="${email1}" readonly="readonly">@<input type="text" name="email2" id="email2" th:value="${email2}" readonly="readonly">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					전화번호
+				</td>
+				<td>
+					<select id="tel1" name="tel1">
+						<option value="010">010</option>
+						<option value="011">011</option>
+						<option value="012">012</option>
+					</select>
+					-
+					<input type="text" id="tel2" name="tel2">-
+			
+					<input type="text" id="tel3" name="tel3">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					생일
+				</td>
+				<td>
+					<select id="byear" name="byear">
+					
+					</select>
+					<input type="text" name="bmonth" id="bmonth">
+					<input type="text" name="bday" id="bday">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					주소
+				</td>
+				<td>
+					<input type="text" id="postcode" name="postcode" placeholder="우편번호" readonly="readonly" style="display: none;"><input type="text" id="address" name="address" placeholder="주소" readonly="readonly"><input type="button" onclick="sample6_execDaumPostcode()" id="execDaumPostcode" value="주소 찾기">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					상세주소
+				</td>
+				<td>
+					<input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="회원가입" id="joinMember">
+					<input type="reset" value="다시작성">
+				</td>
+			</tr>
+			
+			
+			
+			<input type="text" id="sample6_extraAddress" placeholder="참고항목" disabled="disabled">
+		</table>
+	</form>
+</body>
+</html>

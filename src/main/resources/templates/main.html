@@ -1,0 +1,107 @@
+<title>CCV</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div th:replace="~{layouts/header}"></div>
+<!-- 비디오 재생 부분 -->
+<div>
+	<!-- 비디오 자동 재생시 저작권 문제로 인해 브라우저에서 자동재생을 막는다 해결방법으로 autoplay를 사용할 경우 muted와 함께 사용 -->
+	<video id="videoPlace" class="no-hover" width="100%" height="450" style="z-index: 1; position:absolute; margin-top:87.5px; background-color: black;" autoplay muted controls>
+		<!-- 비디오태그에서 재생할 비디오를 source에 작성 -->
+		<source id="videoSource" type="video/mp4">
+	</video>
+	<!-- 동영상 위에 버튼을 추가 -->
+	<div id="buttons" style="position: absolute; z-index: 2; top:85%; left:20%; transform: translate(-50%,-50%); display: flex; gap:5px;">
+		<input type="button" value="상세보기" style="line-height:50%; background-color: rgba(255, 255, 255, 0.7); padding: 10px 20px; border: none; cursor: pointer; border-radius: 32px; width: 99.52px; height:30.01px; font-size: 13px; font-weight: bold;">
+		<button id="videoControllButton" style="width: 30px; height: 30px; background-color: transparent; border: 1px solid rgba(255,255,255,0.7); border-radius: 100px;" onclick= "videoController()">
+			<img src="img/pause.png" width="100%" height="80%" id="imgstatus">
+		</button>
+		<button id="videoSoundControllButton" style="width:30px; height:30px; background-color: transparent; border: 1px solid rgba(255,255,255,0.7); border-radius:100px;" onclick="soundController()">
+			<img src="img/soundOn.png" width="100%" height="80%" id="soundstatus">		
+		</button>
+	</div>
+</div>
+<!--
+	버튼의 값을 이미지로 설정하기 테스트 (성공) 
+	<button><img src="img/o.png" width="10px" height="10px"></button> 
+-->
+<!-- th:inline='javascript' 데이터를 자바스크립트 배열 형식으로 안전하게 변환하기위해
+	 th:inline="javascript": 이 속성을 사용하면 Thymeleaf가 서버 측 배열을 자바스크립트 형식으로 변환하여 처리할 수 있다. 
+	 즉, [[${videos}]]는 자바 배열을 자바스크립트 배열로 자동 변환합니다.
+ -->
+ <script th:inline="javascript">
+ 	var videoFiles = /*[[${videos}]]*/ [];
+	console.log(videoFiles);
+	
+	var currentVideoIndex = 0;
+	
+	// 2. 비디오 재생 함수
+	function loadAndPlayVideo(index){
+		if(index >=videoFiles.length){
+			return;
+		}
+		var videoUrl = "/video/" + videoFiles[index];
+		var videoPlace = document.getElementById("videoPlace");
+		var videoSource = document.getElementById("videoSource");
+		
+		// 비디오 파일을 비디오 플레이어에 설정
+		videoSource.src = videoUrl;
+		videoPlace.load();
+		videoPlace.play();
+	}
+	
+	// 3. 비디오 종료 시 이벤트 처리
+	document.getElementById("videoPlace").onended = function(){
+		currentVideoIndex++;
+		
+		// 모든 비디오를 재생한 경우 처음으로 돌아가기
+		if(currentVideoIndex >= videoFiles.length){
+			currentVideoIndex = 0;
+		}
+		setTimeout(function(){
+			loadAndPlayVideo(currentVideoIndex);
+		},2000);
+		//loadAndPlayVideo(currentVideoIndex);
+	};
+	// 4 페이지 로드 시 첫 번째 비디오 자동재생
+	window.onload = function(){
+		loadAndPlayVideo(currentVideoIndex);
+	};
+	
+	// 5.비디오 컨트롤러 함수 (button안의 img 태그의 값을 기준으로 수행할 작업 변경)
+	function videoController(){
+		var imgstatus = document.getElementById("imgstatus");
+		var img = document.getElementById("imgstatus").getAttribute("src");
+		var video = document.getElementById("videoPlace");
+		if(img == "img/pause.png"){
+			video.pause();
+			imgstatus.setAttribute("src","img/play.png");
+		}else{
+			video.play();
+			imgstatus.setAttribute("src","img/pause.png");
+		}
+	};
+	
+	// 6. 사운드 컨트롤러 함수
+	function soundController(){
+		var soundstatus = document.getElementById("soundstatus");					// soundstatus 태그 자체
+		var soundImg =  document.getElementById("soundstatus").getAttribute("src"); // soundstatus 태그의 이미지 속성
+		var video = document.getElementById("videoPlace");
+		if(soundImg == "img/soundOn.png"){
+			video.muted = false; 	// 비디오의 음소거(muted) 속성 제거
+			video.volume = 0.5; 	// 비디오 사운드 50%
+			soundstatus.setAttribute("src","img/soundOff.png");
+		}else{
+			video.muted = true;
+			soundstatus.setAttribute("src","img/soundOn.png");
+		}
+	};
+</script>
+<style type="text/css">
+/* 동영상에 마우스가 올라갔을때 컨트롤바 나오지 않게 설정 */
+.no-hover{
+	pointer-events:none;
+}
+#buttons{
+	display: flex;
+	
+}
+</style>

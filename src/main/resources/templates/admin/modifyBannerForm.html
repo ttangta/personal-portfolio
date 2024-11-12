@@ -1,0 +1,62 @@
+<style>
+/* 상위태그도 css적용가능 => 해당문서를 포함한 adminPage의 태그도 css적용 가능(충돌이 날 수 있는 것 유의) */
+#content{
+	width: 75%;
+}
+#menuTab{ 
+	margin-top:20px;
+	display: flex;
+	justify-content: center;
+} 
+
+#imgBanner-menuTab{
+	display: flex;
+	gap:20px;
+}
+#menuPlace{ 
+	margin-top: 20px;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#menuPlace").load("insertBannerImg");
+		
+		$("#add-Img").click(function(){
+			$.ajax({
+				url: "insertBannerImg",
+				type: "get",
+				success:function(response){
+					$("#menuPlace").html(response);
+				},
+				error:function(xhr,status,error){
+					$("#menuPlace").html("로드실패");
+				}
+			});
+		});
+		
+		$("#remove-Img").click(function(){
+			$.ajax({
+				url: "removeBannerImg",
+				type:"get",
+				success:function(response){
+					$("#menuPlace").html(response);
+				},
+				error:function(xhr,status,error){
+					$("#menuPlace").html("로드실패");
+				}
+			});
+		});
+	
+	});
+</script>
+<div id="menuTab" align="center">
+	<div id="imgBanner-menuTab">
+		<input type="button" value="배너이미지 추가" id="add-Img">
+		<input type="button" value="배너이미지 삭제" id="remove-Img">
+	</div>
+</div>
+<div id="menuPlace" align="center">
+	
+</div>
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	window.addEventListener("pageshow",function(event){
+		// sessionStorage.getItem(key) => sessionStorage에 저장된 데이터를 가져올 때 사용 키(key)를 사용하여 값을 가져옴
+		if(sessionStorage.getItem("clearPwd") === "true"){
+			$("#pwd").val("");
+			// sessionStorage.removeItem(key) => 저장된 특정 데이터를 키를 통해 삭제
+			// sessionStorage.clear() => sessionStorage에 저장된 모든 데이터를 삭제
+			sessionStorage.removeItem("clearPwd");
+		}
+	});
+	$(document).ready(function(){
+		$("#loginbutton").click(function(){
+			var frm = document.login;
+			if($("#id").val().trim() == "" || $("#id").val().trim() == null){
+				alert("아이디를 입력해주세요");
+				$("#id").focus();
+				return false;
+			}else if($("#pwd").val().trim() == "" || $("#pwd").val().trim() == null){
+				alert("비밀번호를 입력해주세요");
+				$("#pwd").focus();
+				return false;
+			}
+			frm.submit();
+		});
+	});
+</script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<style type="text/css">
+#info{
+	font-size: 13px;
+	text-align: center;
+	color: rgb(175,175,175);
+	margin-top: 20px;
+}
+#table{
+	display: flex;
+	justify-content: center;
+}
+input[type="text"], input[type="password"]{
+	width: 264;
+	height:38px;
+	border:  2px solid rgb(137,137,135);
+}
+
+#loginbutton{
+	width: 264;
+	height:38px;
+	background-color: rgb(251,67,87);
+	border: rgb(251,67,87);
+	font-weight: bold;
+	color: white;
+}
+#table{
+	margin-top: 20px;
+}
+</style>
+</head>
+<body>
+	<span id="info">아이디 비밀번호를 입력하신 후, 로그인 버튼을 클릭해주세요</span>
+	<form name="login" action="loginCheck" method="post">
+	<table id="table" class="table">
+		<tr>
+			<td>
+				<input type="text" placeholder="id입력" id="id" name="id">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="password" placeholder="pw입력" id="pwd" name="pwd">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="button" value="로그인" id="loginbutton">
+			</td>
+		</tr>
+	</table>	
+	</form>
+</body>
+</html>

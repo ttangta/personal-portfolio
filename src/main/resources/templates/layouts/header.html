@@ -1,0 +1,343 @@
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+header {
+	width: 100%;
+	height: 250px;
+}
+
+#header-top { /* header 부분의 가장 위 */
+	height: 150px;
+}
+
+#header-main { /* header 부분의 중앙 */
+	display: flex;
+	align-items: center;
+	padding-left: 25px;
+	height: 50%;
+	background-color: white;
+	justify-content: center;
+	/*test*/
+	border-bottom: 1px solid rgb(243, 243, 243);
+}
+
+#main-menu {
+	display: flex;
+	align-items: flex-end;
+}
+
+#header-bottom { /* header 부분의 아래쪽 */
+	display: flex;
+	justify-content: center;
+	height: 25%;
+}
+
+#usermenu {
+	display: flex;
+	gap: 25px;
+}
+
+#login-container, #logout-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+#joinmember-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+#myplace-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+#QnA-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.label {
+	font-size: 13px;
+}
+
+.sm, #writeMovie {
+	display: inline-flex;
+	align-items: center;
+}
+
+#sub-menu {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	gap: 25px;
+	align-items: center;
+	border-bottom: 2px solid red;
+	justify-content: center;
+}
+
+#detail-menu {
+	display: flex;
+	gap: 25px;
+}
+
+.sm {
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 24px;
+	display: inline-block;
+}
+
+.sm:hover {
+	color: red;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+#writeMovie {
+	border: 0;
+	font-size: 16px;
+	height: 30px;
+	margin-top: 12px;
+}
+
+.img-button {
+	background-image: url('/img/search.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: white;
+	width: 26px;
+	height: 26px;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+}
+
+#movie {
+	display: flex;
+	flex-direction: column;
+}
+
+#detail-menu {
+	display: none;
+	justify-content: center;
+	width: 100%;
+	height: 350px;
+	background-color: rgb(248, 248, 248);
+	gap: 30px;
+	z-index: 100;
+	position: absolute;
+}
+
+ul {
+	list-style: none;
+	border-right: 2px solid rgba(255, 216, 216, 0.7);
+}
+
+li {
+	margin-bottom: 10px;
+	margin-right: 20px;
+}
+
+.title {
+	font-weight: bold;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+a:link {
+	color: black;
+	text-decoration: none;
+}
+
+a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+	$(document).ready(function() {
+		var bannerImgName = /*[[${bannerImgName}]]*/ "[]";
+		// 이미지를 저장할 변수와 기본 설정
+        var currentIndex = 0;
+        var changeInterval = 5000; // 5초마다 이미지 변경
+        let intervalId;
+
+        // 배너 이미지를 동적으로 추가하는 함수
+        function loadBannerImages() {
+            var bannerDiv = $("#header-top");
+            bannerDiv.css('position', 'relative'); // 슬라이드할 영역의 스타일 설정
+
+            // 이미지 태그를 동적으로 생성하고 배너에 추가
+            bannerImgName.forEach(function(imageName, index) {
+                var imgElement = $('<img>').attr('src', '/banner_img/' + imageName)
+                                            .css({
+                                                'position': 'absolute',
+                                                'left': (index === 0) ? '0%' : '100%', // 첫 번째 이미지는 보이게, 나머지는 오른쪽에 배치
+                                                'top': '0',
+                                                'width': '100%',
+                                                'height': '100%'
+                                            });
+                bannerDiv.append(imgElement);
+            });
+        }
+
+        // 이미지 변경 함수 (슬라이드 효과 적용)
+        function changeBannerImage() {
+            var images = $("#header-top img");
+            var nextIndex = (currentIndex + 1) % images.length;
+			
+            // 현재 이미지를 왼쪽으로 슬라이드 아웃
+            images.eq(currentIndex).animate({ left: '-100%' }, 1500, function() {
+                // 슬라이드 아웃이 완료되면 현재 이미지를 다시 오른쪽으로 보냄
+                $(this).css('left', '100%');
+            });
+
+            // 다음 이미지를 슬라이드 인 (오른쪽에서 왼쪽으로)
+            images.eq(nextIndex).css('left', '100%').animate({ left: '0%' }, 1500);
+
+            currentIndex = nextIndex; // 인덱스 업데이트
+        }
+		
+		
+		
+        // 슬라이드 배너 동작 시작
+        if (bannerImgName.length > 1) { // 이미지가 2개 이상일 때만 슬라이드
+        loadBannerImages(); // 처음 이미지를 로드
+        intervalId = setInterval(changeBannerImage, changeInterval); // 5초마다 이미지 변경
+    } else if (bannerImgName.length === 1) { // 이미지가 1개일 경우 고정
+        $("#header-top").append('<img src="/banner_img/' + bannerImgName[0] + '" style="width:100%; height:100%;">');
+    } else { // 이미지가 없을 때
+        $("#header-top").css({"display":"flex","justify-content":"center"}).append('<img src="img/logo.png" style="width:50%; height:100px;">');
+    }
+		
+		$("#img-button").click(function() {
+			alert("test");
+		});
+		$(".sm").hover(function() {
+			// 마우스를 요소 위에 올렸을 때 실행
+			$("#detail-menu").stop(true, true).slideDown(400);
+			$("#detail-menu").css("display", "flex");
+		}, function() {
+			// 마우스를 요소에서 벗어났을 때 실행
+		});
+		$("#detail-menu").mouseleave(function() {
+			$("#detail-menu").stop(true, true).slideUp(200);
+		})
+		
+	});
+</script>
+<header>
+	<div id="header-top" th:fragment="img-banner"></div>
+
+	<div id="header-main">
+		<div id="main-menu">
+			<a href="/"><img alt="로고" src="img/logo.png" width="117px"
+				height="53px"></a><span style="color: black">DEEP DIVE
+				SPACE</span> <img alt="카드" src="img/카드.png" width="136" height="39"
+				style="margin-left: 500px; margin-right: 25px;">
+			<div id="usermenu">
+				<th:block th:if="${session.memId == null}">
+
+					<a href="login"><div id="login-container">
+							<img alt="로그인" src="img/login.png" width="36px" height="36px">
+							<span class="label">로그인</span>
+						</div></a>
+
+				</th:block>
+				<th:block th:if="${session.memId != null}">
+					<a href="logout"><div id="logout-container">
+							<img alt="로그아웃" src="img/logout.png" width="36px" height="36px">
+							<span class="label">로그아웃</span>
+						</div></a>
+				</th:block>
+				<a href="#"><div id="joinmember-container">
+						<img alt="회원가입" src="img/joinmember.png" width="36px" height="36">
+						<span class="label">회원가입</span>
+					</div></a> <a href="#"><div id="myplace-container">
+						<img alt="내정보" src="img/myplace.png" width="36px" height="36">
+						<span class="label">MY CCV</span>
+					</div></a> <a href="#"><div id="QnA-container">
+						<img alt="고객센터" src="img/QnA.png" width="36px" height="36">
+						<span class="label">고객센터</span>
+					</div></a>
+			</div>
+		</div>
+	</div>
+	<div id="header-bottom">
+		<div id="sub-menu">
+			<span class="sm">영화</span> <span class="sm">극장</span> <span
+				class="sm">예매</span> <span class="sm">스토어</span> <span class="sm">이벤트</span>
+			<span class="sm">혜택</span> |
+			<form action="#">
+				<input type="text" style="margin-left: 100px;" id="writeMovie"
+					placeholder="영화를 검색해주세요"> <input type="button" value=""
+					class="img-button" id="img-button">
+			</form>
+		</div>
+
+	</div>
+	<div id="detail-menu">
+		<ul>
+			<li class="title">영화</li>
+			<li>무비차트</li>
+			<li>아트하우스</li>
+			<li>ICECON</li>
+		</ul>
+		<ul>
+			<li class="title">극장</li>
+			<li>CCV 극장</li>
+			<li>특별관</li>
+		</ul>
+		<ul>
+			<li class="title">예매</li>
+			<a href="tickecting"><li>빠른예매</li></a>
+			<li>상영스케줄</li>
+			<li>English Ticketing</li>
+			<li>English Schedule</li>
+		</ul>
+		<ul>
+			<li class="title">스토어</li>
+			<li>패키지</li>
+			<li>영화관람권</li>
+			<li>기프트카드</li>
+			<li>콤보</li>
+			<li>팝콘</li>
+			<li>음료</li>
+			<li>스낵</li>
+			<li>플레이존</li>
+			<li>씨네샵</li>
+		</ul>
+		<ul>
+			<li class="title">이벤트</li>
+			<li>SPECIAL</li>
+			<li>영화/예매</li>
+			<li>멤버십/CLUB</li>
+			<li>CCV 극장별</li>
+			<li>제휴할인</li>
+			<li>당첨자 발표</li>
+			<li>종료된 이벤트</li>
+		</ul>
+	</div>
+</header>
+
+

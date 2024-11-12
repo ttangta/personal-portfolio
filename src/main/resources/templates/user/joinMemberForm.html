@@ -1,0 +1,156 @@
+<link rel="stylesheet" href="css/banner.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<div th:replace="~{user/userCheck :: banner}"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var name = "[[${name}]]";
+		var re_name = name.substring(0,1) + "*" + name.substring(2);
+		var id = "[[${id}]]";
+		if(id != "null" && id !=""){
+			var i = "[[${idlength}]]";
+			var id = id.substring(0,i-2) + "**";
+			$("#userid").text(id);
+		}
+		$("#no1 p").css("color","orange");
+		$("#no1 p").css("text-decoration","underline");
+		$("#memberinfo #username").text(re_name);
+		$.ajax({
+			url:"identityVerification",
+			type:"get",
+			success:function(response){
+				$("#main-place").html(response);
+			},
+			error: function(xhr,status,error){
+				$("#main-place").html("로드실패");
+				console.error("에러:",error);
+			}
+		});
+		$("#go-login").click(function(){
+			location.href = "login";
+		});
+		
+	});
+</script>
+<style type="text/css">
+#main{
+	width: 80%;
+	margin: auto;
+}
+#menu-info{
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+h1{
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+#event{
+	margin-top: 70px;
+}
+li{
+	display: inline-block;
+	margin-right: 80px;
+}
+#memberinfo{
+	border-top: 1px solid black;
+	background-color: rgb(248,248,248);
+	height: 356px;
+	text-align: center;
+}
+#memberinfo #name-info{
+	font-size: 20px;
+	font-weight: bold;
+}
+#userid-info{
+	font-size: 13px;
+	font-weight: normal;
+	 
+}
+#memberinfo span{
+	color: orange;
+}
+#buttons input[type="button"]{
+	width: 160px;
+	height: 40px;
+}
+#findId{
+	border: 1px solid black;
+	background-color: white;
+	border-radius: 4px;
+	font-size: 15px;
+}
+#go-login{
+	border: 1px solid black;
+	background-color: black;
+	color: white;
+	border-radius: 4px;
+	font-size: 15px;
+}
+#main-place{
+	height: 400px;
+	background-color: rgb(248,248,248);
+	border-top: 1px solid black;
+}
+#identity-choice{
+	margin:auto;
+	width:60%;
+	margin-top: 30px;
+}
+</style>
+<div id="main">
+	<div id="menu-info">
+		<h1>회원가입</h1>
+		<span>CCV 멤버십! 엔터테이먼트 서비스를 한 장의 카드로 즐기세요!!</span>
+		<div
+		
+		 id="event">
+			<ul>
+				<li id="no1">
+					<div id="self">
+						<img alt="본인인증" src="img/본인인증.png" width="50px" height="50px">
+						<p>본인인증</p>
+					</div>
+				</li>
+				<li id="no2">
+					<div id="agree">
+						<img alt="약관동의" src="img/약관동의.png" width="50px" height="50px">
+						<p>약관동의</p>
+					</div>
+				</li>
+				<li id="no3">
+					<div id="write">
+						<img alt="정보입력" src="img/회원정보입력.png" width="50px" height="50px">
+						<p>회원가입</p>
+					</div>
+				</li>
+				<li id="no4">
+					<div id="finish">
+						<img alt="가입완료" src="img/가입완료.png" width="50px" height="50px">
+						<p>가입완료</p>
+					</div>
+				</li>
+			</ul>
+	</div>
+	</div>
+	<th:block th:if="${usermember != null}">
+		<div id="memberinfo">
+			<img alt="로고" src="img/logo.png" width="150px" height="80px" style="margin-bottom: 50px; margin-top: 30px;">
+			<p id="name-info"><span id="username"></span>님! 이미 CCV 회원으로 등록되어 있습니다.</p>
+			<p id="userid-info">회원 아이디(<span id="userid"></span>)로 로그인 하시거나 아이디 찾기를 진행해 주세요.
+			<div id="buttons">
+				<input type="button" id="findId" value="아이디 찾기">
+				<input type="button" id="go-login" value="로그인">
+			</div>
+		</div>
+	</th:block>
+	<th:block th:if="${usermember == null}">
+		<div id="main-place">
+	
+		</div>
+		<div id="identity-choice">
+		
+		</div>
+	</th:block>
+</div>

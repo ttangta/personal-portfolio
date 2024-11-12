@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+table{
+	margin: auto;
+	margin-bottom: 10px;
+}
+#button{
+	display: flex;
+	justify-content: center;
+}
+</style>
+</head>
+<body>
+	<h5 style="text-align: center; margin-top: 20px;">상영관 상세 설정</h5>
+	<form action="detail" method="post">
+	<div th:each="i : ${#numbers.sequence(1,dto.total)}">
+		<input type="hidden" name="location[]" th:value="${dto.location}">
+		<input type="hidden" name="location" th:value="${dto.location}">
+		<input type="hidden" name="area" th:value="${dto.area}">
+		<input type="hidden" name="total" th:value="${dto.total}">
+		<input type="hidden" name="opening" th:value="${dto.opening}">
+		<input type="hidden" name="manager" th:value="${dto.manager}">
+		<input type="hidden" name="size" th:value="${size}">
+		<div th:each="j : ${#numbers.sequence(0,size)}">
+			<input type="hidden" name="imgname[]" th:value="${dto.cinemaimg[j].imgname}">
+		</div>
+		<table border="1">
+			<tr>
+				<th>No.[[${i}]]</th>
+				<td>
+					<input type="text" name="screenname[]" required="required" placeholder="상영관 이름">
+					<input type="number" name="seat[]" min="1" required="required" placeholder="좌석수">
+					<select name="screen_type[]">
+						<option value="2D">2D</option>
+						<option value="3D">3D</option>
+						<option value="4D">4D</option>
+						<option value="특별관">특별관</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="button">
+		<input type="submit" value="등록">
+	</div>
+	</form>
+</body>
+</html>

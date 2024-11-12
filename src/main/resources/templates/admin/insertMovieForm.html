@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+body {
+	height: 100%;
+}
+
+table {
+	margin: auto;
+	margin-top: 20px;
+}
+
+select {
+	width: 100%;
+}
+
+input[type="text"], input[type="date"] {
+	width: 97%;
+}
+
+#h, #m {
+	width: 20%;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		var img = 1;
+		var vo = 1;
+		$("#removeImg").attr("disabled","disabled");
+		$("#removeVo").attr("disabled","disabled");
+		
+		for(let i= 0 ; i< 24; i++){
+			$("#h").append($("<option>",{
+				value:i,
+				text:i
+			}));
+		}
+		
+		for(let i=0 ; i<60; i++){
+			$("#m").append($("<option>",{
+				value:i,
+				text:i
+			}));
+		}
+		
+		$("#addImg").click(function(){
+			var newImgRow = `
+				<tr class="addImgRow">
+					<td colspan="2">
+						<input type="file" name="img" required="required" accept="image/*">
+					</td>
+				</tr>
+			`;
+			if($(".addImgRow").length > 0){
+				$(".addImgRow").last().after(newImgRow);
+			}else{
+				$(this).closest("tr").after(newImgRow);
+			}
+			
+			$("#removeImg").removeAttr("disabled");
+			img++;
+		});
+		
+		$("#removeImg").click(function(){
+			$("tr.addImgRow:last").remove();
+			img--;
+			if(img == 1){
+			$("#removeImg").attr("disabled","disabled");
+			}
+		});
+		
+		$("#addVo").click(function(){
+			var newVoRow=`
+				<tr class="addVoRow">
+					<td colspan="2">
+						<input type="file" name="vo" required="required" accept="video/*">
+					</td>
+				</tr>
+			`;
+			if($(".addVoRow").length > 0){
+				$(".addVoRow").last().after(newVoRow);
+			}else{
+				$(this).closest("tr").after(newVoRow);
+			}
+			vo++;
+			$("#removeVo").removeAttr("disabled");
+		});
+		
+		$("#removeVo").click(function(){
+			$("tr.addVoRow:last").remove();
+			vo--
+			if(vo == 1){
+				$("#removeVo").attr("disabled","disabled");
+			}
+		});
+		
+		$("form").on("submit", function(e) {
+			$("input[type='submit']").attr("disabled", "disabled");
+			$("input[type='submit']").val("등록 중...");  // 제출 중 상태 표시
+		});
+	
+		
+	});
+</script>
+</head>
+<body>
+	<form action="insertMovie" method="post" enctype="multipart/form-data">
+		<table border="1">
+			<tr>
+				<th align="center" colspan="2">영화 등록</th>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="title" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>관람등급</th>
+				<td><select name="rating">
+						<option value="전체 관람가">전체 관람가</option>
+						<option value="12세 이상 관람가">12세 이상 관람가</option>
+						<option value="15세 이상 관람가">15세 이상 관람가</option>
+						<option value="청소년 관람불가">청소년 관람불가</option>
+				</select></td>
+			</tr>
+			<tr>
+				<th>장르</th>
+				<td><input type="text" name="genre" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>제작사</th>
+				<td><input type="text" name="studio" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>감독</th>
+				<td><input type="text" name="director" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>개봉일</th>
+				<td><input type="date" name="opening" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>상영시간</th>
+				<td><select id="h" name="h">
+
+				</select>시간&nbsp;&nbsp; <select id="m" name="m">
+
+				</select>분&nbsp;&nbsp;</td>
+			</tr>
+			<tr>
+				<th>언어</th>
+				<td><input type="text" name="language" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>자막여부</th>
+				<td><select name="subtitle">
+						<option value="n">자막없음</option>
+						<option value="y">자막있음</option>
+				</select></td>
+			</tr>
+			<tr>
+				<th>영화 포스터</th>
+				<td><input type="file" name="img" required="required"
+					accept="image/*"> <input type="button" id="addImg"
+					value="+"> <input type="button" id="removeImg" value="-">
+				</td>
+			</tr>
+			<tr>
+				<th>영화 예고편</th>
+				<td><input type="file" name="vo" required="required"
+					accept="video/*"> <input type="button" id="addVo" value="+">
+					<input type="button" id="removeVo" value="-"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><input type="submit"
+					value="영화등록"> <input type="reset" value="다시작성"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

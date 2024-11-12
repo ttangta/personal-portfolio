@@ -1,0 +1,11 @@
+<script type="text/javascript">
+	window.onload = function(){
+		setTimeout(function(){
+			// history.back()시 pwd요소의 값을 비우기 위한 sessionStorage 설정
+			// sessionStorage.setItem(key,value) => sessionStorage에 데이터를 저장할 때 사용, 데이터를 키-값으로 저장 모든 데이터는 문자열로 저장된다
+			sessionStorage.setItem("clearPwd","true");
+			alert("아이디 또는 비밀번호 오류");
+			history.back();
+		},100);
+	}
+</script>

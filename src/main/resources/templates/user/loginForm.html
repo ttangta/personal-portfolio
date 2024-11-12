@@ -1,0 +1,129 @@
+<div th:replace="~{layouts/header}"></div>
+<style type="text/css">
+
+.tab-menu{
+	display: flex;
+	cursor: pointer;
+	gap:2px;
+	border-bottom: 2px solid rgb(137,137,135);
+	
+}
+.tablinks{
+	border: 0;
+	background-color: rgb(137,137,135);
+	width: 110px;
+	height: 40px;
+	font-size: 13px;
+	font-weight: bold;
+	color: white;
+	border-radius: 8px 8px 0 0;
+}
+.tablinks.active{
+	background-color: rgb(251,67,87);
+}
+#choice-form{
+	border-bottom: 2px solid rgb(137,137,135);
+	display: flex;
+	flex-direction: column;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		// 모든 버튼에 클릭 이벤트 추가
+		$(".tablinks").click(function(){
+			// 모든 버튼에서 active 클래스 제거
+			$(".tablinks").removeClass("active");
+			
+			// 클릭된 버튼에 active 클래스 추가
+			$(this).addClass("active");
+		});
+		// 기본
+		$.ajax({
+			url: "memberLoginForm",
+			type:"get",
+			success:function(response){
+				$("#choice-form").html(response);
+			},
+			error: function(xhr,status,error){
+				$("#choice-form").html("로드실패");
+				console.error("에러:",error);
+			}
+		});
+		
+		$.ajax({
+			url: "joinMemberBf",
+			type:"get",
+			success:function(response){
+				$("#joinMember-form").html(response);
+			},
+			error:function(xhr,status,error){
+				$("#joinMember-form").html("로드실패");
+				console.error("에러:",error);
+			}
+		});
+		
+		
+		// 로그인 버튼 클릭시
+		$("#memberLoginForm").click(function(){
+			$("#joinMember-form").css("display","block");
+			$.ajax({
+				url: "memberLoginForm",
+				type:"get",
+				success:function(response){
+					$("#choice-form").html(response);
+				},
+				error: function(xhr,status,error){
+					$("#choice-form").html("로드실패");
+					console.error("에러:",error);
+				}
+			});
+		});
+		
+		// 비회원 버튼 클릭시
+		$("#visterForm").click(function(){
+			$("#joinMember-form").css("display","none");
+			$.ajax({
+				url:"visterForm",
+				type:"get",
+				success:function(response){
+					$("#choice-form").html(response);
+				},
+				error:function(xhr,status,error){
+					$("#choice-form").html("로드실패");
+					console.error("에러:",error);
+				}
+			})
+		});
+		
+		// 비회원 예매확인
+		$("#visterTicketCheck").click(function(){
+			$("#joinMember-form").css("display","none");
+			$.ajax({
+				url:"visterTicketCheck",
+				type:"get",
+				success:function(response){
+					$("#choice-form").html(response);
+				},
+				error:function(xhr,status,error){
+					$("#choice-form").html("로드실패");
+					console.error("에러:",error);
+				}
+			})
+		})
+	});
+</script>
+<div style="margin-top: 150px;" class="main-content">
+	<div id="tab-menu" class="tab-menu" style="width: 50%; margin: auto;">
+			<input type="button" value="로그인" class="tablinks active" id="memberLoginForm">
+			<input type="button" value="비회원 예매" class="tablinks" id="visterForm">
+			<input type="button" value="비회원 예매확인" class="tablinks" id="visterTicketCheck">
+	</div>
+	
+</div>
+<div id="choice-form" style="width: 50%; margin: auto;">
+	
+</div>
+<div id="joinMember-form" style="width: 50%; margin: auto;">
+
+</div>

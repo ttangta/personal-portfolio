@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var img = 1;
+		$("#removeImg").attr("disabled","disabled");
+		
+		$("#addImg").click(function(){
+			var newRow = `
+				<tr class="newRow">
+					<td colspan="2">
+						<input type="file" name="img" required="required" accept="image/*">
+					</td>
+				</tr>
+			`;
+			$(this).closest("tr").after(newRow);
+			img++
+			$("#removeImg").removeAttr("disabled");
+		});
+		
+		$("#removeImg").click(function(){
+			$("tr.newRow:last").remove();
+			img--;
+			if(img == 1){
+				$("#removeImg").attr("disabled","disabled");
+			}
+		});
+	
+	});
+</script>
+<style type="text/css">
+table{
+	margin: auto;
+	margin-top: 20px;
+}
+select{
+	width: 100%;
+}
+
+input[type="text"],input[type="number"],input[type="date"]{
+	width:97.5%;
+}
+</style>
+</head>
+<body>
+	<form action="insertCinema" method="post" enctype="multipart/form-data">
+		<table border="1">
+			<tr>
+				<th colspan="2" align="center">영화관 등록</th>
+			</tr>
+			<tr>
+				<th>지역</th>
+				<td>
+					<select name="area">
+						<option value="서울">서울</option>
+						<option value="경기">경기</option>
+						<option value="인천">인천</option>
+						<option value="강원">강원</option>
+						<option value="대전/충청">대전/충청</option>
+						<option value="대구">대구</option>
+						<option value="부산/울산">부산/울산</option>
+						<option value="경상">경상</option>
+						<option value="광주/전라/제주">광주/전라/제주</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>지점</th>
+				<td>
+					<input type="text" name="location" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>상영관 수</th>
+				<td>
+					<input type="number" name="total" min="1">
+				</td>
+			</tr>
+			<tr>
+				<th>상영관 사진</th>
+				<td>
+					<input type="file" name="img" required="required" accept="image/*">
+					<input type="button" id="addImg" value="+">
+					<input type="button" id="removeImg" value="-">
+				</td>
+			</tr>
+			<tr>
+				<th>개점날짜</th>
+				<td>
+					<input type="date" name="opening" required="required">
+				</td>
+			</tr>
+			<tr>
+				<th>지점장</th>
+				<td>
+					<input type="text" name="manager" required="required">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="submit" value="상영관 상세설정">
+					<input type="reset" value="다시작성">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

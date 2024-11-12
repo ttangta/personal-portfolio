@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#joinMemberForm").click(function(){
+			location.href ="userCheck";
+		})
+	});
+</script>
+<style type="text/css">
+#joinMemberBf{
+	margin-top: 20px;
+	border: 1px solid rgb(213,212,202);
+	padding: 20px;
+}
+#joinMemberForm{
+	border: 2px solid rgb(251,67,87);
+	background-color: white;
+	color: rgb(251,67,87);
+	font-weight: bold;
+}
+#info{
+	font-size: 13px;
+}
+</style>
+</head>
+<body>
+	<div id="joinMemberBf">
+		<span><strong>CCV 회원이 아니신가요? </strong><span id="info">회원가입하시고 다양한 혜택을 누리세요</span></span>&ensp;
+		<input type="button" value="CCV 회원가입하기" id="joinMemberForm">
+	</div>
+</body>
+</html>

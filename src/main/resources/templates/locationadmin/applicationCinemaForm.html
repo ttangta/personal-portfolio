@@ -1,0 +1,122 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		var imgCount = 1;
+		for(var i = 1; i <=10 ; i++){
+			$("#two_d").append(new Option(i,i));
+		}
+		for(var i = 0 ; i<=10 ; i++){
+			$("#tree_d").append(new Option(i,i));
+			$("#four_d").append(new Option(i,i));
+			$("#special").append(new Option(i,i));
+		}
+		$("#Removeimg").attr("disabled","disabled");
+		
+		$("#Addimg").click(function(){
+			var newRow = `
+				<tr>
+					<td colspan="2">
+						<input type="file" name="img" accept="image/*" required="required">
+					</td>
+				</tr>
+			`;
+			$(this).closest("tr").before(newRow);
+			imgCount++;
+			$("#Removeimg").removeAttr("disabled");
+		});
+		
+		$("#Removeimg").click(function(){
+			$(this).closest("tr").prev().remove();
+			imgCount--;
+			if(imgCount == 1){
+				$("#Removeimg").attr("disabled","disabled");
+			}else{
+				$("#Removeimg").removeAttr("disabled");
+			}
+		});
+		
+	});
+</script>
+<style type="text/css">
+table {
+	margin: auto;
+	margin-top: 20px;
+	width: 35%;
+}
+
+select {
+	width: 100%;
+}
+
+input[type="text"] {
+	width: 97.5%;
+}
+</style>
+<form action="applicationCinema" method="post"
+	enctype="multipart/form-data">
+	<table border="1">
+		<input type="hidden" name="status" value="0">
+		<tr>
+			<th align="center" colspan="2">영화관 등록 신청</th>
+		</tr>
+		<tr>
+			<th>지역</th>
+			<td><select name="area" id="area">
+					<option value="서울">서울</option>
+					<option value="경기">경기</option>
+					<option value="인천">인천</option>
+					<option value="강원">강원</option>
+					<option value="대전/충청">대전/충청</option>
+					<option value="대구">대구</option>
+					<option value="부산/울산">부산/울산</option>
+					<option value="경상">경상</option>
+					<option value="광주/전라/제주">광주/전라/제주</option>
+			</select></td>
+		</tr>
+		<tr>
+			<th>지점명</th>
+			<td><input type="text" name="location" id="location"
+				required="required"></td>
+		</tr>
+		<tr>
+			<th>2D상영관 수</th>
+			<td><select name="two_d" id="two_d">
+
+			</select></td>
+		</tr>
+		<tr>
+			<th>3D상영관 수</th>
+			<td><select name="three_d" id="tree_d">
+
+			</select></td>
+		</tr>
+		<tr>
+			<th>4D상영관 수</th>
+			<td><select name="four_d" id="four_d">
+
+			</select></td>
+		</tr>
+		<tr>
+			<th>특별관 수</th>
+			<td><select name="special" id="special">
+
+			</select></td>
+		</tr>
+		<tr>
+			<th>지점 사진</th>
+			<td><input type="file" name="img" accept="image/*"
+				required="required"></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="button" name="Addimg" id="Addimg" value="사진 추가"> 
+				<input type="button" name="Removeimg" id="Removeimg" value="사진 삭제">
+				<input type="submit" value="등록신청"> 
+				<input type="reset" value="다시작성">
+			</td>
+		</tr>
+		<tr>
+
+		</tr>
+	</table>
+</form>

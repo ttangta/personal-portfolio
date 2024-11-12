@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		var list = "[[${list}]]";
+		if(list =="[]"){
+			$("#removeImg").attr("disabled","disabled");
+		}else{
+			$("#removeImg").removeAttr("disabled");
+		}
+		$(".checkimg").attr("disabled","disabled");
+		var checkedimgName = [];
+		// 선택된 값 배열로 저장
+		$(".checkimg").change(function(){
+			if($(this).is(":checked")){
+				checkedimgName.push($(this).val());
+			}else{
+				// 체크 해제된 값 가져오기
+				var removeValue = $(this).val();
+				// 배열에서 선택 해재된 값의 인덱스 확인
+				var index = checkedimgName.indexOf(removeValue);
+				if(index != -1){
+					// 배열에선 선택 해재된 값을 제거
+					checkedimgName.splice(index,1)
+				}
+			}
+		});
+		
+		$("#type").change(function(){
+			if($(this).val() == "All"){
+				$(".checkimg").attr("disabled","disabled");
+			}else{
+				$(".checkimg").removeAttr("disabled");
+			}
+		});
+		
+		$("#removeImg").click(function(){
+			if($("#type").val() == "All"){
+				if(confirm("정말 등록된  배너이미지 전부를 삭제하시겠습니까?")){
+					location.href = "removeAll";
+					}
+			}else{
+				location.href ="removeSelect?imgs=" + checkedimgName;
+				
+			}
+		});
+		
+		
+	});
+</script>
+</head>
+<body>
+	<table action="remove-img" border="1">
+		<tr>
+			<th align="center" colspan="2">현재 배너이미지 목록</th>
+		</tr>
+		<tr>
+			<td colspan="2"><select id="type" name="type">
+					<option value="All">전체삭제</option>
+					<option value="Part">선택삭제</option>
+			</select></td>
+		</tr>
+		<div th:each="img:${list}">
+			<tr>
+				<td><input type="checkbox" th:value="${img.filename}"
+					class="checkimg"></td>
+				<td><img th:src="@{${directory + img.filename}}"></td>
+
+			</tr>
+
+		</div>
+		<tr>
+			<td align="center" colspan="2"><input type="button"
+				id="removeImg" name="removeImg" value="삭제"></td>
+		</tr>
+	</table>
+</body>
+</html>

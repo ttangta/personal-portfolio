@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		var imgRow = 1;
+		$("#img-remove").attr("disabled","disabled");
+        $("#img-add").click(function(){
+            // 새 행을 생성
+            // 이때는 백틱(`)을 사용하여 태그를 기술한다 javascript에서 주로 사용되며, 템플릿 리터럴(template literals)이라고 불리는 기능 제공
+            // 백틱(`) 주요 특징 
+            // 1) 멀티라인 문자열 : 백틱을 사용하면 여러 줄에 걸친 문자열 쉽게 작성
+            // 2) 문자열 보간(String Interpolation) : 문자열 내에 변수를 쉽게 삽입가능 ${}를 사용해 표현식을 포함도 가능 
+            // 3) 이스케이프 불필요 : 작은따옴표나 큰따옴표 사용시 이스케이프가 필요할 수 있지만, 백틱은 이스케이프 없이 문자열 작성 가능
+            var newRow = `
+                <tr>
+                    <td>이미지</td>
+                    <td>
+                        <input type="file" name="banner-img" required="required">
+                    </td>
+                </tr>
+            `;
+            // 마지막 전 줄에 새 행을 추가
+            $("table tr:last").before(newRow);
+            $("#img-remove").removeAttr("disabled");
+            imgRow++;
+            
+        });
+        
+        $("#img-remove").click(function(){
+        	$("table tr:last").prev().remove();
+        	imgRow--;
+        	if(imgRow == 1){
+        		$("#img-remove").attr("disabled","disabled");
+        	}
+        });
+    });
+</script>
+</head>
+<body>
+	<form action="bannerImg_save" method="post" enctype="multipart/form-data">
+		<table border="1">
+			<tr>
+				<th colspan="2">배너이미지 등록</th>
+			</tr>
+			<tr>
+				<td>이미지</td>
+				<td><input type="file" name="banner-img" required="required" accept="image/*"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="등록이미지 추가" id="img-add">
+					<input type="button" value="등록이미지 감소" id="img-remove" >
+					<input type="submit" value="등록">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

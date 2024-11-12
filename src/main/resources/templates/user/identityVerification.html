@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>본인인증</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#email-identity").click(function(){
+			$.ajax({
+				url:"identityByEmail",
+				type:"get",
+				success:function(response){
+					$("#identity-choice").html(response);
+				},
+				error:function(xhr,status,error){
+					$("#identity-choice").html("로드실패");
+					console.erro("에러:",error);
+				}
+			})
+		});
+	})
+</script>
+<style>
+#title{
+	font-weight: bold;
+	margin-top:20px;
+	margin-left: 20px;
+}
+#choice{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap : 100px;
+
+}
+#tel{
+	display: flex;
+	flex-direction: column;
+	padding-right: 100px;
+	border-right: 1px solid black;
+	gap:20px;
+}
+#email{
+	display: flex;
+	flex-direction:column;
+	gap:20px;
+
+}
+#choice input[type="button"]{
+	background-color: black;
+	color:white;
+	border-radius: 8px;
+	height: 34px;
+	
+}
+</style>
+</head>
+<body>
+	<span><p id="title">CCV 멤버십 엔터테이먼트 서비스를 한 장의 카드로 즐기세요!</p></span>
+	<div id="choice">
+		<div id="tel">
+			<img alt="휴대폰 인증" src="img/휴대폰인증.png">
+			<input type="button" value="휴대전화 인증" id="tel-identity">
+		</div>
+		<div id="email">
+			<img alt="이메일 인증" src="img/이메일인증.png">
+			<input type="button" value="이메일 인증" id="email-identity">
+		</div>
+	</div>
+</body>
+</html>
